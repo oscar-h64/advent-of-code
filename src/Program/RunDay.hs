@@ -1,10 +1,10 @@
 module Program.RunDay (runDay) where
 
-import Control.Exception (SomeException, catch)
+import Control.Exception    ( SomeException, catch )
 import Control.Monad.Except
 import Data.Attoparsec.Text
-import Data.Text (pack)
-import System.Directory (doesFileExist)
+import Data.Text            ( pack )
+import System.Directory     ( doesFileExist )
 
 runDay :: (Show a, Show b, Show i) => Parser i -> (i -> a) -> (i -> b) -> Bool -> String -> IO ()
 runDay inputParser partA partB verbose inputFile = do
