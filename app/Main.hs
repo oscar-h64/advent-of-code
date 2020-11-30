@@ -1,6 +1,5 @@
 module Main where
 
-{- ORMOLU_DISABLE -}
 --- Day imports
 import qualified Days.Day01          as Day01 ( runDay )
 import qualified Days.Day02          as Day02 ( runDay )
@@ -27,7 +26,6 @@ import qualified Days.Day22          as Day22 ( runDay )
 import qualified Days.Day23          as Day23 ( runDay )
 import qualified Days.Day24          as Day24 ( runDay )
 import qualified Days.Day25          as Day25 ( runDay )
-{- ORMOLU_ENABLE -}
 
 --- Other imports
 import           Data.Map            ( Map )
@@ -49,7 +47,7 @@ type Verbosity = Bool
 data Options = Options Days Verbosity
 
 validate :: Int -> Maybe Int
-validate n = if (n `elem` Map.keys days) then (Just n) else Nothing
+validate n = if n `elem` Map.keys days then Just n else Nothing
 
 dayParser :: Parser Days
 dayParser = (OneDay <$> day <*> input) <|> allDays
@@ -120,10 +118,9 @@ days =
 performDay :: Options -> IO ()
 performDay (Options d v) = case d of
   AllDays ->
-    sequence_ $
-      fmap
+    mapM_
         ( \(d, (a, i)) -> do
-            putStrLn $ "\n***Day " ++ (printf "%02d" d) ++ "***"
+            putStrLn $ "\n***Day " ++ printf "%02d" d ++ "***"
             a v i
         )
         (Map.toList days)
@@ -133,7 +130,7 @@ performDay (Options d v) = case d of
           Nothing -> putStrLn "Invalid day provided. There are 25 days in Advent."
           Just (d, i) -> do
             let i' = fromMaybe i input
-            putStrLn $ "\n***Day " ++ (printf "%02d" day) ++ "***"
+            putStrLn $ "\n***Day " ++ printf "%02d" day ++ "***"
             d v i'
             putStrLn "************"
 

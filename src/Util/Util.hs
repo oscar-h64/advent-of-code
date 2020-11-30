@@ -1,6 +1,5 @@
 module Util.Util where
 
-{- ORMOLU_DISABLE -}
 import           Data.List
 import           Data.Map.Strict ( Map )
 import qualified Data.Map.Strict as Map
@@ -9,7 +8,6 @@ import           Data.Set        ( Set )
 import qualified Data.Set        as Set
 import           Data.Vector     ( Vector )
 import qualified Data.Vector     as Vec
-{- ORMOLU_ENABLE -}
 
 {-
 This module contains a series of miscellaneous utility functions that I have found helpful in the past.
