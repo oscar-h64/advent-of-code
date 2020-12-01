@@ -34,7 +34,8 @@ inputParser =
         x <- decimal
         space
         pure x
-
+-- Beter solution:
+-- inputParser = decimal `sepBy` space
 
 --------------------------------------------------------------------------------
 --                                   TYPES                                    --
