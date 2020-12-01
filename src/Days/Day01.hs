@@ -29,18 +29,22 @@ runDay = R.runDay inputParser partA partB
 --------------------------------------------------------------------------------
 
 inputParser :: Parser Input
-inputParser = error "Not implemented yet!"
+inputParser =
+    many' $ do
+        x <- decimal
+        space
+        pure x
 
 
 --------------------------------------------------------------------------------
 --                                   TYPES                                    --
 --------------------------------------------------------------------------------
 
-type Input = Void
+type Input = [Int]
 
-type OutputA = Void
+type OutputA = Int
 
-type OutputB = Void
+type OutputB = Int
 
 
 --------------------------------------------------------------------------------
@@ -48,7 +52,7 @@ type OutputB = Void
 --------------------------------------------------------------------------------
 
 partA :: Input -> OutputA
-partA = error "Not implemented yet!"
+partA xs = head [x*y | (x:ys) <- tails xs, y <- ys, x+y == 2020]
 
 
 --------------------------------------------------------------------------------
@@ -56,7 +60,11 @@ partA = error "Not implemented yet!"
 --------------------------------------------------------------------------------
 
 partB :: Input -> OutputB
-partB = error "Not implemented yet!"
+partB xs = head [x*y*z | (x:ys) <- tails xs
+                       , (y:zs) <- tails ys
+                       , z <- zs
+                       , x+y+z == 2020
+                       ]
 
 
 --------------------------------------------------------------------------------
