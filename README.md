@@ -1,6 +1,6 @@
 # AOC 2020
 
-Thank you to @samcoy3 for the template
+Based on [@samcoy3's template](https://github.com/samcoy3/advent-of-code-template)
 
 <!-- This is an (opinionated) Advent of Code template for solutions in Haskell. -->
 
