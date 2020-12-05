@@ -31,19 +31,8 @@ runDay = R.runDay inputParser partA partB
 inputParser :: Parser Input
 inputParser = parseSeat `sepBy` endOfLine
     where
-        parseSeat = do
-            let foldFunc (l, r) (min, max) next =
-                    let newBound = min + ((max - min) `div` 2) in
-                    if | next == l -> (min, newBound)
-                       | next == r -> (newBound + 1, max)
-
-            row' <- count 7 letter
-            let row = snd $ foldl (foldFunc ('F', 'B')) (0, 127) row'
-
-            col' <- count 3 letter
-            let col = snd $ foldl (foldFunc ('L', 'R')) (0, 7) col'
-
-            pure $ 8 * row + col
+        parseSeat = fmap (foldl (\acc new -> acc*2 + new) 0)
+                  $ many1' $ (\x -> fromEnum (x == 'R' || x=='B')) <$> letter
 
 
 --------------------------------------------------------------------------------
@@ -70,9 +59,11 @@ partA = maximum
 --------------------------------------------------------------------------------
 
 partB :: Input -> OutputB
-partB xs = head
-         $ filter (\x -> x+1 `elem` xs && x-1 `elem` xs)
-         $ [1..1000] \\ xs
+partB xs = let max = maximum xs
+               min = minimum xs
+           in head
+            $ filter (\x -> x < max && x > min)
+            $ [1..1000] \\ xs
 
 
 --------------------------------------------------------------------------------
