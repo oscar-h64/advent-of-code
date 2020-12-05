@@ -61,9 +61,7 @@ partA = maximum
 partB :: Input -> OutputB
 partB xs = let max = maximum xs
                min = minimum xs
-           in head
-            $ filter (\x -> x < max && x > min)
-            $ [1..1000] \\ xs
+           in head $ [min..max] \\ xs
 
 
 --------------------------------------------------------------------------------
