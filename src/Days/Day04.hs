@@ -11,8 +11,8 @@ import qualified Data.Map             as M
 import           Data.Maybe
 import           Data.Set             ( Set )
 import qualified Data.Set             as S
-import           Data.Text              ( Text )
-import qualified Data.Text              as T
+import           Data.Text            ( Text )
+import qualified Data.Text            as T
 import           Data.Vector          ( Vector )
 import qualified Data.Vector          as V
 import           Data.Void            ( Void )
@@ -35,7 +35,7 @@ runDay = R.runDay inputParser partA partB
 
 inputParser :: Parser Input
 inputParser = fmap catMaybes $ flip sepBy endOfLine $ do
-    xs <- many' $ do 
+    xs <- many' $ do
         x <- P.take 3
         char ':'
         value <- T.pack <$> many' (satisfy $ not . isSpace)
@@ -95,7 +95,7 @@ isValidHeight x =
         Just i -> case unit of
             "in" -> i >= 59 && i <= 76
             "cm" -> i >= 150 && i <= 193
-            _ -> False 
+            _    -> False
 
 filterFunc :: Passport -> Bool
 filterFunc Passport{..} =

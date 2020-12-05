@@ -29,18 +29,32 @@ runDay = R.runDay inputParser partA partB
 --------------------------------------------------------------------------------
 
 inputParser :: Parser Input
-inputParser = error "Not implemented yet!"
+inputParser = parseSeat `sepBy` endOfLine
+    where
+        parseSeat = do
+            let foldFunc (l, r) (min, max) next =
+                    let newBound = min + ((max - min) `div` 2) in
+                    if | next == l -> (min, newBound)
+                       | next == r -> (newBound + 1, max)
+
+            row' <- count 7 letter
+            let row = snd $ foldl (foldFunc ('F', 'B')) (0, 127) row'
+
+            col' <- count 3 letter
+            let col = snd $ foldl (foldFunc ('L', 'R')) (0, 7) col'
+
+            pure $ 8 * row + col
 
 
 --------------------------------------------------------------------------------
 --                                   TYPES                                    --
 --------------------------------------------------------------------------------
 
-type Input = Void
+type Input = [Int]
 
-type OutputA = Void
+type OutputA = Int
 
-type OutputB = Void
+type OutputB = Int
 
 
 --------------------------------------------------------------------------------
@@ -48,7 +62,7 @@ type OutputB = Void
 --------------------------------------------------------------------------------
 
 partA :: Input -> OutputA
-partA = error "Not implemented yet!"
+partA = maximum
 
 
 --------------------------------------------------------------------------------
@@ -56,7 +70,9 @@ partA = error "Not implemented yet!"
 --------------------------------------------------------------------------------
 
 partB :: Input -> OutputB
-partB = error "Not implemented yet!"
+partB xs = head
+         $ filter (\x -> x+1 `elem` xs && x-1 `elem` xs)
+         $ [1..1000] \\ xs
 
 
 --------------------------------------------------------------------------------
