@@ -30,10 +30,7 @@ runDay = R.runDay inputParser partA partB
 
 inputParser :: Parser Input
 inputParser = fmap unzip $ many' $ do
-    groups <- fmap (map S.fromList) $ many1' $ do
-        aLine <- many1' letter
-        endOfLine
-        pure aLine
+    groups <- fmap (map S.fromList) $ many1' $ many1' letter <* endOfLine
     skipSpace
     pure (S.unions groups, foldr1 S.intersection groups)
 
