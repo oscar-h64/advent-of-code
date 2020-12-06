@@ -29,18 +29,24 @@ runDay = R.runDay inputParser partA partB
 --------------------------------------------------------------------------------
 
 inputParser :: Parser Input
-inputParser = error "Not implemented yet!"
+inputParser = fmap unzip $ many' $ do
+    groups <- fmap (map S.fromList) $ many1' $ do
+        aLine <- many1' letter
+        endOfLine
+        pure aLine
+    skipSpace
+    pure (S.unions groups, foldr1 S.intersection groups)
 
 
 --------------------------------------------------------------------------------
 --                                   TYPES                                    --
 --------------------------------------------------------------------------------
 
-type Input = Void
+type Input = ([Set Char], [Set Char])
 
-type OutputA = Void
+type OutputA = Int
 
-type OutputB = Void
+type OutputB = Int
 
 
 --------------------------------------------------------------------------------
@@ -48,7 +54,7 @@ type OutputB = Void
 --------------------------------------------------------------------------------
 
 partA :: Input -> OutputA
-partA = error "Not implemented yet!"
+partA = sum . map S.size . fst
 
 
 --------------------------------------------------------------------------------
@@ -56,7 +62,7 @@ partA = error "Not implemented yet!"
 --------------------------------------------------------------------------------
 
 partB :: Input -> OutputB
-partB = error "Not implemented yet!"
+partB = sum . map S.size . snd
 
 
 --------------------------------------------------------------------------------
