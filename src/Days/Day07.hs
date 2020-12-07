@@ -4,6 +4,9 @@ module Days.Day07 (runDay) where
 
 --------------------------------------------------------------------------------
 
+import           Control.Applicative
+
+import           Data.Functor         ( ($>) )
 import           Data.List
 import           Data.Map             ( Map )
 import qualified Data.Map             as M
@@ -19,7 +22,6 @@ import qualified Util.Util            as U
 
 import           Data.Attoparsec.Text
 
-import           Control.Applicative
 import qualified Program.RunDay       as R ( runDay )
 
 --------------------------------------------------------------------------------
@@ -43,8 +45,7 @@ inputParser = parseOne `sepBy` endOfLine
             space
             string "bags contain"
             space
-            let
-            inside <- (string "no other bags." >> pure []) <|> many1' (do
+            inside <- (string "no other bags." $> []) <|> many1' (do
                 number <- decimal
                 space
                 colour' <- readColour
