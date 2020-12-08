@@ -45,6 +45,7 @@ library:
     - NumericUnderscores
     - DeriveFunctor
     - DeriveFoldable
+    - LambdaCase
 
 executables:
   aoc-template-exe:
