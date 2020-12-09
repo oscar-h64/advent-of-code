@@ -4,7 +4,7 @@ module Days.Day09 (runDay) where
 
 --------------------------------------------------------------------------------
 
-import           Data.List
+import           Data.List            as L
 import           Data.Map             ( Map )
 import qualified Data.Map             as M
 import           Data.Maybe
@@ -17,6 +17,7 @@ import qualified Util.Util            as U
 
 import           Data.Attoparsec.Text
 
+import           Control.Arrow
 import qualified Program.RunDay       as R ( runDay )
 
 --------------------------------------------------------------------------------
@@ -29,26 +30,34 @@ runDay = R.runDay inputParser partA partB
 --------------------------------------------------------------------------------
 
 inputParser :: Parser Input
-inputParser = error "Not implemented yet!"
+inputParser = decimal `sepBy` endOfLine
 
 
 --------------------------------------------------------------------------------
 --                                   TYPES                                    --
 --------------------------------------------------------------------------------
 
-type Input = Void
+type Input = [Int]
 
-type OutputA = Void
+type OutputA = Int
 
-type OutputB = Void
+type OutputB = Int
 
 
 --------------------------------------------------------------------------------
 --                                   PART A                                   --
 --------------------------------------------------------------------------------
 
+isSumOfPair :: Int -> [Int] -> Bool
+isSumOfPair x xs = not $ null [() | (y:ys) <- tails xs, z <- ys, y + z == x]
+
+getFirstInvalid :: [Int] -> [Int] -> Int
+getFirstInvalid xs (y:ys) = if isSumOfPair y xs
+                            then getFirstInvalid (tail xs ++ [y]) ys
+                            else y
+
 partA :: Input -> OutputA
-partA = error "Not implemented yet!"
+partA = uncurry getFirstInvalid . splitAt 25
 
 
 --------------------------------------------------------------------------------
@@ -56,7 +65,13 @@ partA = error "Not implemented yet!"
 --------------------------------------------------------------------------------
 
 partB :: Input -> OutputB
-partB = error "Not implemented yet!"
+partB = uncurry (+)
+      . (minimum &&& maximum)
+      . head
+      . filter ((==167829540) . sum)
+      . concatMap inits
+      . tails
+      . L.takeWhile (/= 167829540)
 
 
 --------------------------------------------------------------------------------
