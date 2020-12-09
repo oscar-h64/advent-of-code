@@ -60,6 +60,7 @@ inputParser = parseOne `sepBy` endOfLine
 --------------------------------------------------------------------------------
 --                                   TYPES                                    --
 --------------------------------------------------------------------------------
+
 data BagRule = BagRule {
     brColour :: Text,
     brInside :: Set (Int, Text)
@@ -81,9 +82,10 @@ canHoldColour x = any ((x==) . snd) . S.elems . brInside
 
 recursiveContains :: Text -> [BagRule] -> [BagRule]
 recursiveContains _ []    = []
-recursiveContains x rules = let direct = filter (canHoldColour x) rules
-                                remaining = rules \\ direct
-                            in direct ++ concatMap (flip recursiveContains remaining . brColour) direct
+recursiveContains x rules =
+    let direct = filter (canHoldColour x) rules
+        remaining = rules \\ direct
+    in direct ++ concatMap (flip recursiveContains remaining . brColour) direct
 
 partA :: Input -> OutputA
 partA = S.size . S.fromList . map brColour . recursiveContains "shiny gold"
@@ -94,8 +96,10 @@ partA = S.size . S.fromList . map brColour . recursiveContains "shiny gold"
 --------------------------------------------------------------------------------
 
 recursiveCount :: Text -> [BagRule] -> Int
-recursiveCount x xs = let toCheck = brInside $ head $ filter ((x ==) . brColour) xs
-                      in sum $ map (\(i,y) -> i + i * recursiveCount y xs) $ S.toList toCheck
+recursiveCount x xs = let toCheck = brInside $ head
+                                             $ filter ((x ==) . brColour) xs
+                      in sum $ map (\(i,y) -> i + i * recursiveCount y xs)
+                             $ S.toList toCheck
 
 partB :: Input -> OutputB
 partB = recursiveCount "shiny gold"

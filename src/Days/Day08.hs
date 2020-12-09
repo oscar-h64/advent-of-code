@@ -64,8 +64,8 @@ type ComputerM = State (Int, Int, Set Int, Vector Instruction)
 recurse :: ComputerM (Either Int Int)
 recurse = get >>= \(inst, acc, prev, ins) ->
     if | inst >= V.length ins -> pure $ Right acc
-       | inst < 0           -> pure $ Left acc
-       | otherwise          -> if inst `S.member` prev then pure $ Left acc else
+       | inst < 0 -> pure $ Left acc
+       | otherwise -> if inst `S.member` prev then pure $ Left acc else
             case ins V.! inst of
                 NoOp _  -> addLoc >> updateIns 1 >> recurse
                 Accum i -> addLoc >> updateIns 1 >> updateAcc i >> recurse
@@ -95,12 +95,18 @@ partA xs = fromLeft 0 $ evalState recurse (0, 0, S.empty, xs)
 --------------------------------------------------------------------------------
 
 partB :: Input -> OutputB
-partB xs = head $ rights $ map (\x -> evalState recurse (0, 0, S.empty, x)) allPoss
+partB xs = head $ rights
+                $ map (\x -> evalState recurse (0, 0, S.empty, x)) allPoss
     where allPoss = fst $ foldl f ([],[V.empty]) xs
+          addIns ins = map (`V.snoc` ins)
           f (accDone, accToDo) = \case
-              NoOp i -> (map (`V.snoc` NoOp i) accDone ++ map (`V.snoc` Jump i) accToDo, map (`V.snoc` NoOp i) accToDo)
-              Jump i -> (map (`V.snoc` Jump i) accDone ++ map (`V.snoc` NoOp i) accToDo, map (`V.snoc` Jump i) accToDo)
-              Accum i -> (map (`V.snoc` Accum i) accDone, map (`V.snoc` Accum i) accToDo)
+              NoOp i -> ( addIns (NoOp i) accDone ++ addIns (Jump i) accToDo
+                        , addIns (NoOp i) accToDo
+                        )
+              Jump i -> ( addIns (Jump i) accDone ++ addIns (NoOp i) accToDo
+                        , addIns (Jump i) accToDo
+                        )
+              Accum i -> (addIns (Accum i) accDone, addIns (Accum i) accToDo)
 
 
 --------------------------------------------------------------------------------

@@ -4,6 +4,8 @@ module Days.Day09 (runDay) where
 
 --------------------------------------------------------------------------------
 
+import           Control.Arrow
+
 import           Data.List            as L
 import           Data.Map             ( Map )
 import qualified Data.Map             as M
@@ -17,7 +19,6 @@ import qualified Util.Util            as U
 
 import           Data.Attoparsec.Text
 
-import           Control.Arrow
 import qualified Program.RunDay       as R ( runDay )
 
 --------------------------------------------------------------------------------
