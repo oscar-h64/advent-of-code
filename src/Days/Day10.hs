@@ -66,26 +66,35 @@ partA = (\(x1,_,x3) -> (1+x3)*x1) . uncurry (f (0,0,0)) . first head . splitAt 1
 
 -- CHAINS ARE CONSTRUCTED IN REVERSE - LARGEST AT FRONT
 
-findWith :: Int -> Int -> [Int] -> Maybe (Int, [Int])
-findWith _    _   []     = Nothing
-findWith last gap (x:xs) =
-    if | x - last == gap -> Just (x,xs)
-       | x - last > gap -> Nothing
-       | otherwise -> findWith last gap xs
+-- O(HEAD-DEATH-OF-UNIVERSE):
 
-applyFindWith :: [Int] -> (Int, [Int]) -> ([Int], [Int])
-applyFindWith chain (x, xs) = (x:chain, xs)
+-- findWith :: Int -> Int -> [Int] -> Maybe (Int, [Int])
+-- findWith _    _   []     = Nothing
+-- findWith last gap (x:xs) =
+--     if | x - last == gap -> Just (x,xs)
+--        | x - last > gap -> Nothing
+--        | otherwise -> findWith last gap xs
 
-g :: ([Int], [Int]) -> [([Int], [Int])]
-g (chain, []) = pure (chain, [])
-g (chain, remaining) = let last = head chain
-                       in map (applyFindWith chain) $ catMaybes [findWith last 1 remaining, findWith last 2 remaining, findWith last 3 remaining]
+-- applyFindWith :: [Int] -> (Int, [Int]) -> ([Int], [Int])
+-- applyFindWith chain (x, xs) = (x:chain, xs)
 
-h :: [([Int], [Int])] -> [([Int], [Int])]
-h chains = if all (null . snd) chains then chains else h $ concatMap g chains
+-- g :: ([Int], [Int]) -> [([Int], [Int])]
+-- g (chain, []) = pure (chain, [])
+-- g (chain, remaining) = let last = head chain
+--                        in map (applyFindWith chain) $ catMaybes [findWith last 1 remaining, findWith last 2 remaining, findWith last 3 remaining]
+
+-- h :: [([Int], [Int])] -> [([Int], [Int])]
+-- h chains = if all (null . snd) chains then chains else h $ concatMap g chains
+
+-- partB :: Input -> OutputB
+-- partB input = length $ filter ((== maximum input) . head) $ map fst $ h [([0], input)]
+
+g :: Map Int Int -> Int -> Map Int Int
+g possMap toDo = M.adjust (const $ sum $ map h [1,2,3]) toDo possMap
+    where h i = traceShowId (fromMaybe 0 $ possMap M.!? (toDo - i))
 
 partB :: Input -> OutputB
-partB input = length $ filter ((== maximum input) . head) $ map fst $ h [([0], input)]
-
+partB input = let possMap = M.fromList $ zip input (1:repeat 0)
+              in traceShowId (foldl g possMap $ tail input) M.! last input 
 
 --------------------------------------------------------------------------------
