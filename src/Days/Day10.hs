@@ -95,6 +95,6 @@ g possMap toDo = M.adjust (const $ sum $ map h [1,2,3]) toDo possMap
 
 partB :: Input -> OutputB
 partB input = let possMap = M.fromList $ zip input (1:repeat 0)
-              in traceShowId (foldl g possMap $ tail input) M.! last input 
+              in traceShowId (foldl g possMap $ tail input) M.! last input
 
 --------------------------------------------------------------------------------
