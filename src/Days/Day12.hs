@@ -76,11 +76,11 @@ applyInsA (Move West i) (x,y,d) = (x, y - i, d)
 applyInsA (Rotate i) (x,y,d) = (x, y, foldr (const nextDirA) d [1..i `div` 90])
 applyInsA (Forward i) (x,y,d) = applyInsA (Move d i) (x,y,d)
 
-manhattanDist :: (Int, Int, a) -> Int
-manhattanDist (x,y,_) = abs x + abs y
+manhattanDistA :: (Int, Int, a) -> Int
+manhattanDistA (x,y,_) = abs x + abs y
 
 partA :: Input -> OutputA
-partA = manhattanDist . foldl' (flip applyInsA) (0,0,East)
+partA = manhattanDistA . foldl' (flip applyInsA) (0,0,East)
 
 
 --------------------------------------------------------------------------------
