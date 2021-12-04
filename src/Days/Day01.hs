@@ -1,6 +1,5 @@
 module Days.Day01 (runDay) where
 
-{- ORMOLU_DISABLE -}
 import Data.List
 import Data.Map.Strict (Map)
 import qualified Data.Map.Strict as Map
@@ -12,28 +11,32 @@ import qualified Data.Vector as Vec
 import qualified Util.Util as U
 
 import qualified Program.RunDay as R (runDay, Day)
-import Data.Attoparsec.Text
+import Data.Attoparsec.Text hiding (take)
 import Data.Void
-{- ORMOLU_ENABLE -}
 
 runDay :: R.Day
 runDay = R.runDay inputParser partA partB
 
 ------------ PARSER ------------
 inputParser :: Parser Input
-inputParser = error "Not implemented yet!"
+inputParser = many' (decimal <* skipSpace)
 
 ------------ TYPES ------------
-type Input = Void
+type Input = [Int]
 
-type OutputA = Void
+type OutputA = Int
 
-type OutputB = Void
+type OutputB = Int
 
 ------------ PART A ------------
 partA :: Input -> OutputA
-partA = error "Not implemented yet!"
+partA (x:xs) = snd $ foldl (\(last, acc) next -> (next, acc + fromEnum (next > last))) (x, 0) xs 
 
 ------------ PART B ------------
+partBF :: Input -> Int -> OutputB
+partBF [_,_] _ = 0
+partBF xs last = let next = sum (take 3 xs)
+                 in fromEnum (next > last) + partBF (tail xs) next
+
 partB :: Input -> OutputB
-partB = error "Not implemented yet!"
+partB xs = partBF (tail xs) (sum $ take 3 xs)
